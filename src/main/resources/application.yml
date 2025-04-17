@@ -1,9 +1,0 @@
-api:
-  logging:
-    enabled: true
-    level: DEBUG
-    log-execution-enabled: true
-    log-exception-enabled: true
-    log-execution-time-enabled: true
-    log-tracking-enabled: true
-    handling-result-enabled: true

@@ -11,13 +11,11 @@ import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
 
 @Aspect
-@Component
 @EnableConfigurationProperties(LoggingProperties.class)
 public class LoggingAspect {
     private final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
@@ -27,9 +25,9 @@ public class LoggingAspect {
         this.properties = properties;
     }
 
-    @Before("@annotation(t1.openSchool.logging.annotation.LogExecution)")
+    @Before("@annotation(logging.aspect.annotation.LogExecution)")
     public void logMethodEntry(JoinPoint joinPoint) {
-        if (!properties.isEnabled() || !properties.isLogExecutionEnabled()) return;
+        if (!properties.isEnabled()) return;
 
         log(properties.getLevel(), "Method called: {} with parameters: {}",
                 joinPoint.getSignature().getName(),
@@ -37,11 +35,11 @@ public class LoggingAspect {
     }
 
     @AfterThrowing(
-            pointcut = "@annotation(t1.openSchool.logging.annotation.LogException)",
+            pointcut = "@annotation(logging.aspect.annotation.LogException)",
             throwing = "ex"
     )
     public void logMethodException(JoinPoint joinPoint, Exception ex) {
-        if (!properties.isEnabled() || !properties.isLogExceptionEnabled()) return;
+        if (!properties.isEnabled()) return;
 
         log(LoggingProperties.Level.ERROR, "Exception in method {}: {} - {}",
                 joinPoint.getSignature().getName(),
@@ -49,9 +47,9 @@ public class LoggingAspect {
                 ex.getMessage());
     }
 
-    @Around("@annotation(t1.openSchool.logging.annotation.LogExecutionTime)")
+    @Around("@annotation(logging.aspect.annotation.LogExecutionTime)")
     public Object measureExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
-        if (!properties.isEnabled() || !properties.isLogExecutionTimeEnabled()) {
+        if (!properties.isEnabled()) {
             return joinPoint.proceed();
         }
 
@@ -66,9 +64,9 @@ public class LoggingAspect {
         return result;
     }
 
-    @Around("@annotation(t1.openSchool.logging.annotation.LogTracking)")
+    @Around("@annotation(logging.aspect.annotation.LogTracking)")
     public Object logTracking(ProceedingJoinPoint joinPoint) throws Throwable {
-        if (!properties.isEnabled() || !properties.isLogTrackingEnabled()) {
+        if (!properties.isEnabled()) {
             return joinPoint.proceed();
         }
 
@@ -93,11 +91,11 @@ public class LoggingAspect {
     }
 
     @AfterReturning(
-            pointcut = "@annotation(t1.openSchool.logging.annotation.HandlingResult)",
+            pointcut = "@annotation(logging.aspect.annotation.HandlingResult)",
             returning = "result"
     )
     public void handleResult(JoinPoint joinPoint, Object result) {
-        if (!properties.isEnabled() || !properties.isHandlingResultEnabled()) return;
+        if (!properties.isEnabled()) return;
 
         log(properties.getLevel(), "Processing result of method {}",
                 joinPoint.getSignature().getName());
