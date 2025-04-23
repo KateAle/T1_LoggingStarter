@@ -1,20 +1,14 @@
 package logging;
 
-
-import logging.config.LoggingProperties;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import logging.aspect.LoggingAspect;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import logging.aspect.LoggingAspect;
 
 @Configuration
-@EnableConfigurationProperties(LoggingProperties.class)
 public class LoggingAutoConfiguration {
 
     @Bean
-    @ConditionalOnMissingBean
-    public LoggingAspect loggingAspect(LoggingProperties properties) {
-        return new LoggingAspect(properties);
+    public LoggingAspect loggingAspect() {
+        return new LoggingAspect();
     }
 }
